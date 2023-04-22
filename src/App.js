@@ -1,25 +1,44 @@
-import logo from './logo.svg';
-import './App.css';
+import "./App.css";
+import Todo from "./components/Todo";
+import React, { useState } from "react";
+import { Container, List, Paper } from "@mui/material";
+import AddTodo from "./components/AddTodo";
 
 function App() {
-  return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+  const [items, setItems] = useState([]);
+
+  const addItem = (item) => {
+    item.id = "ID-" + items.length;
+    item.done = false;
+    // The update must be setItems and create a new array.
+    setItems([...items, item]);
+    console.log("items : ", items);
+  };
+
+  const editItem = () => {
+    setItems([...items]);
+  };
+
+  const deleteItem = (item) => {
+    const newItems = items.filter(e => e.id !== item.id);
+    setItems([...newItems]);
+  }
+
+  let todoItems = items.length > 0 && (
+    <Paper style={{ margin: 16 }}>
+      <List>
+        {items.map((item) => (
+          <Todo item={item} key={item.id} editItem={editItem} deleteItem={deleteItem} />
+        ))}
+      </List>
+    </Paper>
   );
+  return (<div className="App">
+    <Container maxWidth="md">
+      <AddTodo addItem={addItem} />
+      <div className="TodoList">{todoItems}</div>
+    </Container>
+  </div>);
 }
 
 export default App;
